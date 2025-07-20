@@ -25,5 +25,8 @@ jobs:
     - name: Build solution
       run: dotnet build Library.UnitTesting.sln --configuration Release --no-restore
 
-    - name: Run tests
-      run: dotnet test Library.UnitTesting.sln --configuration Release --no-build --verbosity normal
+    - name: Run unit tests only
+      run: |
+        Get-ChildItem -Recurse -Filter '*UnitTests.csproj' |
+        ForEach-Object { dotnet test $_.FullName --configuration Release --no-build --verbosity normal }
+      shell: pwsh

@@ -1,0 +1,31 @@
+name: Release to NuGet
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'   # Matches tags like v1.0.1, v2.3.0 etc.
+
+jobs:
+  publish:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.x'
+
+    - name: Restore dependencies
+      run: dotnet restore Library.UnitTesting.sln
+
+    - name: Build
+      run: dotnet build Library.UnitTesting.sln --configuration Release --no-restore
+
+    - name: Pack NuGet
+      run: dotnet pack Source/Library.UnitTesting/Library.UnitTesting.csproj --configuration Release --no-build
+
+    - name: Push to NuGet
+      run: dotnet nuget push Source/Library.UnitTesting/bin/Release/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json

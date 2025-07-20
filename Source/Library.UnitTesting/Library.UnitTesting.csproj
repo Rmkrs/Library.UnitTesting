@@ -6,7 +6,7 @@
 		<Nullable>disable</Nullable>
 
 		<PackageId>Library.UnitTesting</PackageId>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<Authors>Rmkrs</Authors>
 		<Company>Rmkrs</Company>
 		<Description>A lightweight library that simplifies unit testing using AutoFixture, Moq, FluentAssertions, and NUnit.</Description>

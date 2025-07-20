@@ -20,14 +20,22 @@ public static class TypeTestingExtensions
 
     public static void AssertConstructorGuard(this Type type, UnitTestBaseOptions options)
     {
+        var nullabilityInfoContext = new NullabilityInfoContext();
+
         foreach (var constructor in type.GetConstructors())
         {
             var parameters = constructor.GetParameters();
 
             var mocks = parameters.Select(p => CreateParameter(p.ParameterType, options.TypeCreationOverrides)).ToArray();
 
-            for (int i = 0; i < parameters.Length; i++)
+            for (var i = 0; i < parameters.Length; i++)
             {
+                var nullabilityInfo = nullabilityInfoContext.Create(parameters[i]);
+                if (nullabilityInfo.WriteState == NullabilityState.Nullable)
+                {
+                    continue;
+                }
+
                 if (parameters[i].ParameterType.IsValueType)
                 {
                     continue;
